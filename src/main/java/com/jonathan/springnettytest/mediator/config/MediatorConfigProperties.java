@@ -9,12 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "netty")
 public class MediatorConfigProperties {
-    @NonNull
     private int mediatorDownstreamPort;
 
-    @NonNull
     private int bossCount;
 
-    @NonNull
     private int workerCount;
 }

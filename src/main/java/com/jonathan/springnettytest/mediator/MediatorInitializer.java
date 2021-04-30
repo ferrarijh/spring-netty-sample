@@ -20,7 +20,7 @@ public class MediatorInitializer extends ChannelInitializer<SocketChannel> {
                 new DelimiterBasedFrameDecoder(MAX_LEN, Delimiters.lineDelimiter()),
                 new FrameToMessageDecoder(),
 
-                new MediatorEncoder(),
+                new MessageEncoder(),
 
                 new SimpleMediatorHandler()
         );

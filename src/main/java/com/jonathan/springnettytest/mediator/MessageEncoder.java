@@ -8,7 +8,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
-public class MediatorEncoder extends MessageToByteEncoder<Message> {
+public class MessageEncoder extends MessageToByteEncoder<Message> {
 
     private static final Charset charset = StandardCharsets.UTF_8;
 

@@ -12,16 +12,16 @@ import java.net.InetSocketAddress;
 @Component
 public class MediatorServer {
 
-    @Qualifier("mediatorDownstreamBootstrap")
     private final ServerBootstrap mediatorDownstreamBootstrap;
 
-    @Qualifier("mediatorUpstreamBootstrap")
-    private final Bootstrap mediatorUpstreamBoostrap;
+    private final Bootstrap mediatorUpstreamBootstrap;
 
     private final InetSocketAddress downstreamPort;
 
     public void start(){
         try {
+//            mediatorUpstreamBootstrap.connect("localhost", 8081).sync();
+//            mediatorUpstreamBootstrap.connect("localhost", 8082).sync();
             mediatorDownstreamBootstrap.bind(downstreamPort).sync();
         }catch(Exception e){
             e.printStackTrace();

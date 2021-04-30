@@ -12,14 +12,16 @@ import org.springframework.stereotype.Component;
 public class Car {
 
     private final Engine engine;
+    private final String name;
 
     @Autowired
-    public Car(@Qualifier("dieselEngine")Engine engine){
+    public Car(@Qualifier("dieselEngine")Engine engine, CarConfig config){
         this.engine = engine;
+        this.name = config.name();
     }
 
     public void start(){
-        System.out.println("car started..");
+        System.out.println("car["+name+"] started..");
         engine.start();
     }
 }

@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-class FrameToMessageDecoder extends ByteToMessageDecoder {
+public class FrameToMessageDecoder extends ByteToMessageDecoder {
 
     private static final Charset charset = StandardCharsets.UTF_8;
 

@@ -9,16 +9,18 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 import java.net.InetSocketAddress;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableConfigurationProperties(MediatorConfigProperties.class)
+@RequiredArgsConstructor
 public class MediatorConfig {
 
     private final MediatorConfigProperties mediatorConfigProperties;
@@ -30,21 +32,24 @@ public class MediatorConfig {
 //    @Qualifier("mediatorWorkerGroup")
 //    private final NioEventLoopGroup workerGroup;
 
-    @Primary
-    @Bean(name="mediatorDownstreamBootstrap")
-    public ServerBootstrap mediatorDownstreamBootstrap(MediatorInitializer mInitializer){
+    @Bean
+    public ServerBootstrap mediatorDownstreamBootstrap(MediatorInitializer mInitializer,
+                                                       @Qualifier("mediatorBossGroup") NioEventLoopGroup bossGroup,
+                                                       @Qualifier("mediatorWorkerGroup") NioEventLoopGroup workerGroup
+                                                       ){
         ServerBootstrap sb = new ServerBootstrap();
-        sb.group(bossGroup(), workerGroup())
+        sb.group(bossGroup, workerGroup)
                 .handler(new LoggingHandler(LogLevel.INFO))
                 .channel(NioServerSocketChannel.class)
                 .childHandler(mInitializer);
         return sb;
     }
 
-    @Bean(name="mediatorUpstreamBootstrap")
-    public Bootstrap mediatorDownstreamBoostrap(){
+    @Bean
+    public Bootstrap mediatorDownstreamBoostrap(
+            @Qualifier("mediatorWorkerGroup") NioEventLoopGroup workerGroup){
         Bootstrap b = new Bootstrap();
-        b.group(workerGroup())
+        b.group(workerGroup)
                 .channel(NioSocketChannel.class)
                 .handler(new MediatorInitializer());
         return b;
@@ -55,14 +60,22 @@ public class MediatorConfig {
         return new InetSocketAddress(mediatorConfigProperties.getMediatorDownstreamPort());
     }
 
-    @Primary
-    @Bean(name="mediatorBossGroup")
-    public NioEventLoopGroup bossGroup(){
-        return new NioEventLoopGroup(mediatorConfigProperties.getBossCount());
-    }
+    @Configuration
+    @RequiredArgsConstructor
+    @EnableConfigurationProperties(MediatorConfigProperties.class)
+    class MediatorLoopGroup{
 
-    @Bean(name="mediatorWorkerGroup")
-    public NioEventLoopGroup workerGroup(){
-        return new NioEventLoopGroup(mediatorConfigProperties.getWorkerCount());
+        @Primary
+        @Bean(name="mediatorBossGroup")
+        public NioEventLoopGroup bossGroup(){
+            int bs = mediatorConfigProperties.getBossCount();
+            System.out.println(bs);
+            return new NioEventLoopGroup(bs);
+        }
+
+        @Bean(name="mediatorWorkerGroup")
+        public NioEventLoopGroup workerGroup(){
+            return new NioEventLoopGroup(mediatorConfigProperties.getWorkerCount());
+        }
     }
 }
