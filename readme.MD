@@ -1,5 +1,7 @@
 # Spring Netty Application Sample
 
+Sample Netty server(gateway) application on top of spring framework.
+
 ### Dependency injection
 * Always prefer constructor based injection over method injection or field injection(`@Autowired`).
   - Prevent NPE at compile time
