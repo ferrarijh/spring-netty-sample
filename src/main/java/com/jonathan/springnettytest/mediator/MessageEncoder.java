@@ -14,7 +14,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
-        String outStr = msg.getSrc() + msg.getDst() + msg.getBody() + '\n';
+        String outStr = msg.getSrc() + msg.getSvc() + msg.getDst() + msg.getBody() + '\n';
         out.writeCharSequence(outStr, charset);
     }
 }

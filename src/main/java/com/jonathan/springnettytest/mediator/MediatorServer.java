@@ -20,7 +20,7 @@ public class MediatorServer {
 
     public void start(){
         try {
-//            mediatorUpstreamBootstrap.connect("localhost", 8081).sync();
+            mediatorUpstreamBootstrap.connect("localhost", 8081).sync();
 //            mediatorUpstreamBootstrap.connect("localhost", 8082).sync();
             mediatorDownstreamBootstrap.bind(downstreamPort).sync();
         }catch(Exception e){

@@ -69,7 +69,6 @@ public class MediatorConfig {
         @Bean(name="mediatorBossGroup")
         public NioEventLoopGroup bossGroup(){
             int bs = mediatorConfigProperties.getBossCount();
-            System.out.println(bs);
             return new NioEventLoopGroup(bs);
         }
 

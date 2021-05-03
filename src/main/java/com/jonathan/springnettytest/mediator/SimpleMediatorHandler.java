@@ -9,6 +9,7 @@ import io.netty.channel.SimpleChannelInboundHandler;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 
 public class SimpleMediatorHandler extends SimpleChannelInboundHandler<Message> {
 
@@ -17,13 +18,18 @@ public class SimpleMediatorHandler extends SimpleChannelInboundHandler<Message> 
         msg.show();
 
         String src = msg.getSrc();
+        String svc = msg.getSvc();
         String dst = msg.getDst();
         if(dst.equals("AA"))
             ChannelRepository.put(src, ctx.channel());
-        else if (('A'<=dst.charAt(0) || dst.charAt(0) <= 'Z')
-                && ('0'<=dst.charAt(1) || '9' <= dst.charAt(1))){
-            Channel dstChannel = ChannelRepository.get(msg.getDst());
-            dstChannel.writeAndFlush(msg);
+        else if('0' <= dst.charAt(1) && dst.charAt(1) <= '9'){
+            if ('a'<=svc.charAt(0) && svc.charAt(0) <= 'z'){   //lowercase indicates it visited EndServer.
+                Channel dstChannel = ChannelRepository.get(dst);
+                dstChannel.writeAndFlush(msg);
+            }else if ('A'<=svc.charAt(0) && svc.charAt(0) <= 'Z'){
+                Channel svcChannel = ChannelRepository.get(svc);
+                svcChannel.writeAndFlush(msg);
+            }
         }
     }
 }
