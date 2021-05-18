@@ -2,6 +2,28 @@
 
 Sample Netty server(gateway) application on top of spring framework.
 
+## Scheme
+
+Gateway establishes N:M connection between downstream clients and upstream servers to simulate routing of fixed-length frame message.
+
+Connection establishment follows below steps:
+
+1) Gateway connects to upstream servers, receives message containing id from each server. 
+2) Gateway puts each server id and channel to map in `ChannelRepository`.
+3) Clients connect to the gateway then send message containing id from each client.
+4) Gateway puts each client id and channel to map in `ChannelRepository`.
+
+After connections are set, messages sent from client follow below steps:
+
+1) Client sends message to gateway containing destination client id, service server id and content.
+2) Gateway routes message to respective upstream service server.
+3) Upstream server processes message content and sends it to gateway.
+4) Gateway routes processed message to destination client.
+
+Servers and clients simulated with putty.
+
+## Notes
+
 ### Dependency injection
 * Always prefer constructor based injection over method injection or field injection(`@Autowired`).
   - Prevent NPE at compile time
